@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Blazored.LocalStorage
+namespace RA.Blazored.LocalStorage
 {
     public interface ILocalStorageService
     {
@@ -22,7 +22,7 @@ namespace Blazored.LocalStorage
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask<T> GetItemAsync<T>(string key, CancellationToken cancellationToken = default);
+        ValueTask<ProtectedBrowserStorageResult<T>> GetItemAsync<T>(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieve the specified data from local storage as a <see cref="string"/>.
@@ -33,7 +33,7 @@ namespace Blazored.LocalStorage
         /// (<see cref="JSRuntime.DefaultAsyncTimeout"/>) from being applied.
         /// </param>
         /// <returns>A <see cref="ValueTask"/> representing the completion of the operation.</returns>
-        ValueTask<string> GetItemAsStringAsync(string key, CancellationToken cancellationToken = default);
+        ValueTask<string?> GetItemAsStringAsync(string key, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Return the name of the key at the specified <paramref name="index"/>.

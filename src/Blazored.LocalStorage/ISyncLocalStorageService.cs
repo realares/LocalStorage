@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Blazored.LocalStorage
+namespace RA.Blazored.LocalStorage
 {
     public interface ISyncLocalStorageService
     {

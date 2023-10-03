@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Blazored.LocalStorage.Serialization;
+using RA.Blazored.LocalStorage.Serialization;
 
-namespace Blazored.LocalStorage
+namespace RA.Blazored.LocalStorage
 {
     internal class LocalStorageService : ILocalStorageService, ISyncLocalStorageService
     {
@@ -22,6 +22,9 @@ namespace Blazored.LocalStorage
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
+
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
 
             var e = await RaiseOnChangingAsync(key, data).ConfigureAwait(false);
 
@@ -52,7 +55,7 @@ namespace Blazored.LocalStorage
             RaiseOnChanged(key, e.OldValue, data);
         }
 
-        public async ValueTask<T> GetItemAsync<T>(string key, CancellationToken cancellationToken = default)
+        public async ValueTask<ProtectedBrowserStorageResult<T>> GetItemAsync<T>(string key, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
@@ -60,26 +63,29 @@ namespace Blazored.LocalStorage
             var serialisedData = await _storageProvider.GetItemAsync(key, cancellationToken).ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(serialisedData))
-                return default;
+                return new ProtectedBrowserStorageResult<T>(false, default);
 
             try
             {
-                return _serializer.Deserialize<T>(serialisedData);
+                return new ProtectedBrowserStorageResult<T>(true, _serializer.Deserialize<T>(serialisedData));
             }
             catch (JsonException e) when (e.Path == "$" && typeof(T) == typeof(string))
             {
                 // For backward compatibility return the plain string.
                 // On the next save a correct value will be stored and this Exception will not happen again, for this 'key'
-                return (T)(object)serialisedData;
+                //return (T)(object)serialisedData;
+                return new ProtectedBrowserStorageResult<T>(false, default);
             }
         }
 
-        public ValueTask<string> GetItemAsStringAsync(string key, CancellationToken cancellationToken = default)
+        public async ValueTask<string?> GetItemAsStringAsync(string key, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
 
-            return _storageProvider.GetItemAsync(key, cancellationToken);
+            var result = await _storageProvider.GetItemAsync(key, cancellationToken);
+            
+            return result;
         }
 
         public ValueTask RemoveItemAsync(string key, CancellationToken cancellationToken = default)
@@ -237,7 +243,7 @@ namespace Blazored.LocalStorage
             return e;
         }
 
-        private async Task<T> GetItemInternalAsync<T>(string key, CancellationToken cancellationToken = default)
+        private async Task<T?> GetItemInternalAsync<T>(string key, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));

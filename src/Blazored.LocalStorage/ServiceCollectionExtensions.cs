@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using Blazored.LocalStorage.JsonConverters;
-using Blazored.LocalStorage.Serialization;
-using Blazored.LocalStorage.StorageOptions;
+using RA.Blazored.LocalStorage.JsonConverters;
+using RA.Blazored.LocalStorage.Serialization;
+using RA.Blazored.LocalStorage.StorageOptions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Blazored.LocalStorage
+namespace RA.Blazored.LocalStorage
 {
     [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions

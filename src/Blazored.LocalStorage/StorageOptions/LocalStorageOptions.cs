@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Blazored.LocalStorage.StorageOptions
+namespace RA.Blazored.LocalStorage.StorageOptions
 {
     public class LocalStorageOptions
     {

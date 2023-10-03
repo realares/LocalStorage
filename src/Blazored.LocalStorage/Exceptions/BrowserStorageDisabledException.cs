@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blazored.LocalStorage.Exceptions
+namespace RA.Blazored.LocalStorage.Exceptions
 {
     public class BrowserStorageDisabledException : Exception
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Blazored.LocalStorage
+namespace RA.Blazored.LocalStorage
 {
     [ExcludeFromCodeCoverage]
     public class ChangingEventArgs : ChangedEventArgs

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Blazored.LocalStorage.Exceptions;
+using RA.Blazored.LocalStorage.Exceptions;
 
-namespace Blazored.LocalStorage
+namespace RA.Blazored.LocalStorage
 {
     internal class BrowserStorageProvider : IStorageProvider
     {
@@ -37,11 +37,13 @@ namespace Blazored.LocalStorage
             }
         }
 
-        public async ValueTask<string> GetItemAsync(string key, CancellationToken cancellationToken = default)
+        public async ValueTask<string?> GetItemAsync(string key, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await _jSRuntime.InvokeAsync<string>("localStorage.getItem", cancellationToken, key);
+                string? test = await _jSRuntime.InvokeAsync<string?>("localStorage.getItem", cancellationToken, key);
+                return test;
+                //return await _jSRuntime.InvokeAsync<string>("localStorage.getItem", cancellationToken, key);
             }
             catch (Exception exception)
             {

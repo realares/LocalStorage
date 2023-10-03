@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Blazored.LocalStorage
+namespace RA.Blazored.LocalStorage
 {
     internal interface IStorageProvider
     {

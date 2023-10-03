@@ -1,4 +1,4 @@
-namespace Blazored.LocalStorage.Serialization
+namespace RA.Blazored.LocalStorage.Serialization
 {
     public interface IJsonSerializer
     {

@@ -1,8 +1,8 @@
-using Blazored.LocalStorage.StorageOptions;
+using RA.Blazored.LocalStorage.StorageOptions;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 
-namespace Blazored.LocalStorage.Serialization
+namespace RA.Blazored.LocalStorage.Serialization
 {
     internal class SystemTextJsonSerializer : IJsonSerializer
     {
