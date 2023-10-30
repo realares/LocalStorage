@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net7.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <Authors>Chris Sainty, RealAres</Authors>
     <Copyright>Copyright 2020 (c) Chris Sainty. All rights reserved.</Copyright> 
@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="$(DotNet7Version)" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.12" />
   </ItemGroup>
 
   <ItemGroup>
