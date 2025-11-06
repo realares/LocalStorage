@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using RA.Blazored.LocalStorage.JsonConverters;
 using RA.Blazored.LocalStorage.Serialization;
@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RA.Blazored.LocalStorage
 {
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]  
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddBlazoredLocalStorage(this IServiceCollection services)
