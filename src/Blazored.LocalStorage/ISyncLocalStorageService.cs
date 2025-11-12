@@ -15,7 +15,7 @@ namespace RA.Blazored.LocalStorage
         /// </summary>
         /// <param name="key">A <see cref="string"/> value specifying the name of the local storage slot to use</param>
         /// <returns>The data from the specified <paramref name="key"/> as a <typeparamref name="T"/></returns>
-        T GetItem<T>(string key);
+        T? GetItem<T>(string key);
 
         /// <summary>
         /// Retrieve the specified data from local storage as a <see cref="string"/>.

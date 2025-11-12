@@ -17,7 +17,7 @@ namespace RA.Blazored.LocalStorage
         public BrowserStorageProvider(IJSRuntime jSRuntime)
         {
             _jSRuntime = jSRuntime;
-            _jSInProcessRuntime = jSRuntime as IJSInProcessRuntime;
+            _jSInProcessRuntime = (IJSInProcessRuntime)jSRuntime;
         }
 
         public async ValueTask ClearAsync(CancellationToken cancellationToken = default)
@@ -37,13 +37,11 @@ namespace RA.Blazored.LocalStorage
             }
         }
 
-        public async ValueTask<string?> GetItemAsync(string key, CancellationToken cancellationToken = default)
+        public ValueTask<string?> GetItemAsync(string key, CancellationToken cancellationToken = default)
         {
             try
             {
-                string? test = await _jSRuntime.InvokeAsync<string?>("localStorage.getItem", cancellationToken, key);
-                return test;
-                //return await _jSRuntime.InvokeAsync<string>("localStorage.getItem", cancellationToken, key);
+                return _jSRuntime.InvokeAsync<string?>("localStorage.getItem", cancellationToken, key);
             }
             catch (Exception exception)
             {
@@ -183,7 +181,7 @@ namespace RA.Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                _jSInProcessRuntime.InvokeVoid("localStorage.clear");
+                _jSInProcessRuntime?.InvokeVoid("localStorage.clear");
             }
             catch (Exception exception)
             {

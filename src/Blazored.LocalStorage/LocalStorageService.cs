@@ -11,6 +11,8 @@ namespace RA.Blazored.LocalStorage
     {
         private readonly IStorageProvider _storageProvider;
         private readonly IJsonSerializer _serializer;
+        public event EventHandler<ChangingEventArgs>? Changing;
+        public event EventHandler<ChangedEventArgs>? Changed;
 
         public LocalStorageService(IStorageProvider storageProvider, IJsonSerializer serializer)
         {
@@ -34,7 +36,7 @@ namespace RA.Blazored.LocalStorage
             var serialisedData = _serializer.Serialize(data);
             await _storageProvider.SetItemAsync(key, serialisedData, cancellationToken).ConfigureAwait(false);
 
-            RaiseOnChanged(key, e.OldValue, data);
+            RaiseOnChanged(key, e?.OldValue, data);
         }
 
         public async ValueTask SetItemAsStringAsync(string key, string data, CancellationToken cancellationToken = default)
@@ -55,7 +57,7 @@ namespace RA.Blazored.LocalStorage
             RaiseOnChanged(key, e.OldValue, data);
         }
 
-        public async ValueTask<ProtectedBrowserStorageResult<T>> GetItemAsync<T>(string key, CancellationToken cancellationToken = default)
+        public async ValueTask<ProtectedBrowserStorageResult<T?>> GetItemAsync<T>(string key, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
@@ -63,18 +65,18 @@ namespace RA.Blazored.LocalStorage
             var serialisedData = await _storageProvider.GetItemAsync(key, cancellationToken).ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(serialisedData))
-                return new ProtectedBrowserStorageResult<T>(false, default);
+                return new ProtectedBrowserStorageResult<T?>(false, default);
 
             try
             {
-                return new ProtectedBrowserStorageResult<T>(true, _serializer.Deserialize<T>(serialisedData));
+                return new ProtectedBrowserStorageResult<T?>(true, _serializer.Deserialize<T>(serialisedData));
             }
             catch (JsonException e) when (e.Path == "$" && typeof(T) == typeof(string))
             {
                 // For backward compatibility return the plain string.
                 // On the next save a correct value will be stored and this Exception will not happen again, for this 'key'
                 //return (T)(object)serialisedData;
-                return new ProtectedBrowserStorageResult<T>(false, default);
+                return new ProtectedBrowserStorageResult<T?>(false, default);
             }
         }
 
@@ -153,7 +155,7 @@ namespace RA.Blazored.LocalStorage
             RaiseOnChanged(key, e.OldValue, data);
         }
 
-        public T GetItem<T>(string key)
+        public T? GetItem<T>(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException(nameof(key));
@@ -171,7 +173,7 @@ namespace RA.Blazored.LocalStorage
             {
                 // For backward compatibility return the plain string.
                 // On the next save a correct value will be stored and this Exception will not happen again, for this 'key'
-                return (T)(object)serialisedData;
+                return (T?)(object)serialisedData;
             }
         }
 
@@ -214,7 +216,7 @@ namespace RA.Blazored.LocalStorage
         public bool ContainKey(string key)
             => _storageProvider.ContainKey(key);
 
-        public event EventHandler<ChangingEventArgs> Changing;
+
         private async Task<ChangingEventArgs> RaiseOnChangingAsync(string key, object data)
         {
             var e = new ChangingEventArgs
@@ -229,7 +231,7 @@ namespace RA.Blazored.LocalStorage
             return e;
         }
 
-        private ChangingEventArgs RaiseOnChangingSync(string key, object data)
+        private ChangingEventArgs RaiseOnChangingSync(string key, object? data)
         {
             var e = new ChangingEventArgs
             {
@@ -262,7 +264,7 @@ namespace RA.Blazored.LocalStorage
             }
         }
 
-        private object GetItemInternal(string key)
+        private object? GetItemInternal(string key)
         {
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException(nameof(key));
@@ -282,8 +284,7 @@ namespace RA.Blazored.LocalStorage
             }
         }
 
-        public event EventHandler<ChangedEventArgs> Changed;
-        private void RaiseOnChanged(string key, object oldValue, object data)
+        private void RaiseOnChanged(string key, object? oldValue, object? data)
         {
             var e = new ChangedEventArgs
             {
