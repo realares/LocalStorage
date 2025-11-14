@@ -12,12 +12,12 @@ namespace RA.Blazored.LocalStorage
         private const string StorageNotAvailableMessage = "Unable to access the browser storage. This is most likely due to the browser settings.";
         
         private readonly IJSRuntime _jSRuntime;
-        private readonly IJSInProcessRuntime _jSInProcessRuntime;
+        private readonly IJSInProcessRuntime? _jSInProcessRuntime;
 
         public BrowserStorageProvider(IJSRuntime jSRuntime)
         {
             _jSRuntime = jSRuntime;
-            _jSInProcessRuntime = (IJSInProcessRuntime)jSRuntime;
+            _jSInProcessRuntime = jSRuntime as IJSInProcessRuntime;
         }
 
         public async ValueTask ClearAsync(CancellationToken cancellationToken = default)
@@ -199,7 +199,7 @@ namespace RA.Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                return _jSInProcessRuntime.Invoke<string>("localStorage.getItem", key);
+                return _jSInProcessRuntime!.Invoke<string>("localStorage.getItem", key);
             }
             catch (Exception exception)
             {
@@ -217,7 +217,7 @@ namespace RA.Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                return _jSInProcessRuntime.Invoke<string>("localStorage.key", index);
+                return _jSInProcessRuntime!.Invoke<string>("localStorage.key", index);
             }
             catch (Exception exception)
             {
@@ -235,7 +235,7 @@ namespace RA.Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                return _jSInProcessRuntime.Invoke<bool>("localStorage.hasOwnProperty", key);
+                return _jSInProcessRuntime!.Invoke<bool>("localStorage.hasOwnProperty", key);
             }
             catch (Exception exception)
             {
@@ -253,7 +253,7 @@ namespace RA.Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                return _jSInProcessRuntime.Invoke<int>("eval", "localStorage.length");
+                return _jSInProcessRuntime!.Invoke<int>("eval", "localStorage.length");
             }
             catch (Exception exception)
             {
@@ -271,7 +271,7 @@ namespace RA.Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                _jSInProcessRuntime.InvokeVoid("localStorage.removeItem", key);
+                _jSInProcessRuntime!.InvokeVoid("localStorage.removeItem", key);
             }
             catch (Exception exception)
             {
@@ -291,7 +291,7 @@ namespace RA.Blazored.LocalStorage
             {
                 foreach (var key in keys)
                 {
-                    _jSInProcessRuntime.InvokeVoid("localStorage.removeItem", key);
+                    _jSInProcessRuntime!.InvokeVoid("localStorage.removeItem", key);
                 }
             }
             catch (Exception exception)
@@ -310,7 +310,7 @@ namespace RA.Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                _jSInProcessRuntime.InvokeVoid("localStorage.setItem", key, data);
+                _jSInProcessRuntime!.InvokeVoid("localStorage.setItem", key, data);
             }
             catch (Exception exception)
             {
@@ -328,7 +328,7 @@ namespace RA.Blazored.LocalStorage
             CheckForInProcessRuntime();
             try
             {
-                return _jSInProcessRuntime.Invoke<IEnumerable<string>>("eval", "Object.keys(localStorage)");
+                return _jSInProcessRuntime!.Invoke<IEnumerable<string>>("eval", "Object.keys(localStorage)");
             }
             catch (Exception exception)
             {
